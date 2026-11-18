@@ -218,8 +218,8 @@ impl Emu {
                 let y = digit3 as usize;
                 let (new_vx, borrow) = self.v_reg[y].overflowing_sub(self.v_reg[x]);
                 let new_vf = if borrow { 0 } else { 1 };
-                self.v_reg[x] = new_fx;
-                self.v_reg[0xF] = new_rf;
+                self.v_reg[x] = new_vx;
+                self.v_reg[0xF] = new_vf;
             }
 
             // 8XYE - VX <<= 1
