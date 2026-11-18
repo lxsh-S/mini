@@ -1,3 +1,5 @@
+use core::borrow;
+
 const RAM_SIZE: usize = 4096; // 4kb
 const NUM_REGS: usize = 16;
 const STACK_SIZE: usize = 16;
@@ -103,7 +105,7 @@ impl Emu {
 
             // 00E0 - Clear screen
             (0, 0, 0xE, 0) => {
-                self.screen = [false; SCREENWIDTH * SCREENHEIGHT];
+                self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
             }
 
             // 00EE - Return from subroutine
@@ -125,7 +127,90 @@ impl Emu {
                 self.pc = nnn;
             }
 
-            (_, _, _, _) => Unimplemented!("Unimplemented opcode: {}", op),
+            // 3XNN - Skip next if VX == NN
+            (3, _, _, _) => {
+                let x = digit2 as usize;
+                let nn = (op & 0xFF) as u8;
+                if self.v_reg[x] == nn {
+                    self.pc += 2;
+                }
+            }
+
+            // 4XNN = Skip next if VX != NN
+            (4, _, _, _) => {
+                let x = digit2 as usize;
+                let nn = (op & 0xFF) as u8;
+                if self.v_reg[x] != nn {
+                    self.pc += 2;
+                }
+            }
+
+            // 5XYO - Skip next if VX == VY
+            (5, _, _, 0) => {
+                let x = digit2 as usize;
+                let y = digit3 as usize;
+                if self.v_reg[x] == self.v_reg[y] {
+                    self.pc += 2;
+                }
+            }
+
+            // 6XNN - VX = NN
+            (6, _, _, _) => {
+                let x = digit2 as usize;
+                let nn = (op & 0xFF) as u8;
+                self.v_reg[x] == nn;
+            }
+
+            // 7XNN - VX += NN
+            (7, _, _, _) => {
+                let x = digit2 as usize;
+                let nn = (op & 0xFF) as u8;
+                self.v_reg[x] = self.v_reg[x].wrapping_add(nn);
+            }
+
+            // 8XY0 - VX = VY
+            (8, _, _, 0) => {
+                let x = digit2 as usize;
+                let y = digit3 as usize;
+                self.v_reg[x] = self.v_reg[y];
+            }
+
+            // 8XY1, 8XY2, 8XY3 - Bitwise operations
+            (8, _, _, 1) => {
+                let x = digit2 as usize;
+                let y = digit3 as usize;
+                self.v_reg[x] |= self.v_reg[y];
+            }
+
+            // 8XY4 - VX += VY
+            (8, _, _, 4) => {
+                let x = digit2 as usize;
+                let y = digit3 as usize;
+                let (new_vx, carry) = self.v_reg[x].overflowing_add(self.v_reg[y]);
+                let new_vf = if carry { 1 } else { 0 };
+                self.v_reg[x] = new_vx;
+                self.v_reg[0xF] = new_vf;
+            }
+
+            // 8XY5 - VX -= VY
+            (8, _, _, 5) => {
+                let x = digit2 as usize;
+                let y = digit3 as usize;
+                let (new_vx, borrow) = self.v_reg[x].overflowing_sub(self.v_reg[y]);
+                let new_vf = if borrow { 0 } else { 1 };
+                self.v_reg[x] = new_vx;
+                self.v_reg[0xF] = new_vf;
+            }
+
+            // 0XY6 - VX >>= 1
+            (8, _, _, 6) => {
+                let x = digit2 as usize;
+                let lsb = self.v_reg[x] & 1;
+                self.v_reg[x] >>= 1;
+                self.v_reg[0xF] = lsb;
+            }
+
+            (_, _, _, _) => unimplemented!("Unimplemented opcode: {}", op),
         }
     }
 
