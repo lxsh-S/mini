@@ -1,2 +1,3 @@
 # mini
-A text editor written in rust
+
+A Chip8 emulator written in rust
