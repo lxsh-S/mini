@@ -103,26 +103,41 @@ impl Emu {
 
         match (digit1, digit2, digit3, digit4) {
             // 0000 - NOP
+            // we do nothing!, we simply move to the next
+            // opcode.
             (0, 0, 0, 0) => return,
 
             // 00E0 - Clear screen
+            // '0x00E0' is the instruction for clearing
+            // screen, we simply reset our screen buffer
             (0, 0, 0xE, 0) => {
                 self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
             }
 
             // 00EE - Return from subroutine
+            // subroutine -> functions
+            // move teh 'pc' to specified address and
+            // resume execution. We use stack by pushing
+            // our address onto the stack then run routine
+            // code adn when er are ready to return we pop
+            // that value off our stack and start execution
+            // from that point again
             (0, 0, 0xE, 0xE) => {
                 let ret_addr = self.pop();
                 self.pc = ret_addr;
             }
 
             // 1NNN - Jump
+            // As it looks, we simply move the 'pc'
+            // to the given addr
             (1, _, _, _) => {
                 let nnn = op & 0xFFF;
                 self.pc = nnn;
             }
 
             // 2NNN - Call subroutine
+            // opposite to '00EE', we add current 'pc'
+            // tp stack adn tehn jump to the gievn address
             (2, _, _, _) => {
                 let nnn = op & 0xFFF;
                 self.push(self.pc);
@@ -130,6 +145,10 @@ impl Emu {
             }
 
             // 3XNN - Skip next if VX == NN
+            // we use V register here!
+            // 2nd digit -> which resister to use
+            // 3rd, 4th -> provide raw value
+            // so, skip if values comparing are equal
             (3, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0xFF) as u8;
@@ -139,6 +158,7 @@ impl Emu {
             }
 
             // 4XNN = Skip next if VX != NN
+            // we skip if the values we are comparing are not equal
             (4, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0xFF) as u8;
@@ -148,6 +168,9 @@ impl Emu {
             }
 
             // 5XYO - Skip next if VX == VY
+            // 3rd digit -> index into another V register
+            // as we dont use the last digit, this opcode requires it
+            // to be at 0
             (5, _, _, 0) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -157,6 +180,8 @@ impl Emu {
             }
 
             // 6XNN - VX = NN
+            // we set the V register which is given by
+            // 2nd digit to the value gievn
             (6, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0xFF) as u8;
@@ -164,6 +189,8 @@ impl Emu {
             }
 
             // 7XNN - VX += NN
+            // we add the given value to VX register,
+            // a chance of overflow so we use diffent method then usual
             (7, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0xFF) as u8;
@@ -171,6 +198,8 @@ impl Emu {
             }
 
             // 8XY0 - VX = VY
+            // same as '6XNN' but the source value is
+            // from VY register
             (8, _, _, 0) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -178,6 +207,7 @@ impl Emu {
             }
 
             // 8XY1, 8XY2, 8XY3 - Bitwise operations
+            // these 3 opcodes are all similar funcs
             (8, _, _, 1) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -185,6 +215,13 @@ impl Emu {
             }
 
             // 8XY4 - VX += VY
+            // can cause overflow, also we use the 'VF' register
+            // 1st 15 registers -> general use
+            // 16th register -> flag register
+            // basically a special vairable that noties if the
+            // last app resulted in under or over flow
+            // if overflow -> set 'VF' to 1
+            // or else -> set 'VF' to 0
             (8, _, _, 4) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -195,6 +232,9 @@ impl Emu {
             }
 
             // 8XY5 - VX -= VY
+            // same as '8XY4' but subtraction instead of add
+            // 'VF' carries flag in the opposite direction
+            // if underflow -> set to 0
             (8, _, _, 5) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -205,6 +245,9 @@ impl Emu {
             }
 
             // 0XY6 - VX >>= 1
+            // we perform a single shift to right
+            // on the value in VX and the bit that
+            // was dropped off is stores in VF
             (8, _, _, 6) => {
                 let x = digit2 as usize;
                 let lsb = self.v_reg[x] & 1;
@@ -213,6 +256,8 @@ impl Emu {
             }
 
             // 8XY7 - VX = VY -VX
+            // Works the same way as '0XY6'
+            // but in the opposite direction
             (8, _, _, 7) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
