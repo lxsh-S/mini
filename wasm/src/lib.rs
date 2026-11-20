@@ -1,4 +1,5 @@
 use chip8_core::*;
+use js_sys::Uint8Array;
 use wasm_bindgen::prelude::*;
 use web_sys::KeyboardEvent;
 
@@ -30,19 +31,17 @@ impl EmuWasm {
         self.chip8.reset();
     }
 
-    impl EmuWasm {
-        #[wasm_bindgen]
-        pub fn keypress(&mut self, evt: KeyboardEvent, pressed: bool) {
-            let key = evt.key();
-            if let Some(k) = key2btn(&key) {
-                self.chip8.keypress(k, pressed);
-            }
+    #[wasm_bindgen]
+    pub fn keypress(&mut self, evt: KeyboardEvent, pressed: bool) {
+        let key = evt.key();
+        if let Some(k) = Self::key2btn(&key) {
+            self.chip8.keypress(k, pressed);
         }
     }
     // user input: well be doing as we did foe the desktop
-    // forntend but this time we need to work with 
+    // forntend but this time we need to work with
     // javascripts's KeyboardEvent
-    fn key2btn(key: &str) -> Option {
+    fn key2btn(key: &str) -> Option<usize> {
         match key {
             "1" => Some(0x1),
             "2" => Some(0x2),
@@ -66,6 +65,7 @@ impl EmuWasm {
 
     // loading would be also same but just
     // going to be javascript
+    #[wasm_bindgen]
     pub fn load_game(&mut self, data: Uint8Array) {
         self.chip8.load(&data.to_vec());
     }
