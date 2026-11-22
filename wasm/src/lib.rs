@@ -2,7 +2,6 @@ use chip8_core::*;
 use js_sys::Uint8Array;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
-use web_sys::KeyboardEvent;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, KeyboardEvent};
 
 #[wasm_bindgen]
@@ -86,5 +85,28 @@ impl EmuWasm {
     #[wasm_bindgen]
     pub fn load_game(&mut self, data: Uint8Array) {
         self.chip8.load(&data.to_vec());
+    }
+
+    // draw
+    // we get the display buf from our core
+    // and then we iterate through every pixel
+    // we clear the canvas in black colour and
+    // set the draw color to white before we
+    // call this func
+    #[wasm_bindgen]
+    pub fn draw_screen(&mut self, scale: usize) {
+        let disp = self.chip8.get_display();
+        for i in 0..(SCREEN_WIDTH * SCREEN_HEIGHT) {
+            if disp[i] {
+                let x = i % SCREEN_WIDTH;
+                let y = i / SCREEN_WIDTH;
+                self.ctx.fill_rect(
+                    (x * scale) as f64,
+                    (y * scale) as f64,
+                    scale as f64,
+                    scale as f64,
+                );
+            }
+        }
     }
 }

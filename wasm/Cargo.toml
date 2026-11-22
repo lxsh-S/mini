@@ -13,7 +13,7 @@ features = [
   "KeyboardEvent",
   "CanvasRenderingContext2d",
   "Document",
-  "Elemnt",
+  "Element",
   "HtmlCanvasElement",
   "ImageData",
   "Window",
