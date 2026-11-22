@@ -1,4 +1,4 @@
-import init, * as wasm from "./wasm.js";
+import init, * as wasm from "../pkg/wasm.js";
 
 const WIDTH = 64;
 const HEIGHT = 32;
@@ -33,7 +33,7 @@ async function run() {
       // we'll stop a prev game from rendering if one
       // exists
       if (anim_frame != 0) {
-        window.cancelAnimationFram(anim_frame);
+        window.cancelAnimationFrame(anim_frame);
       }
 
       let file = evt.target.files[0];
@@ -59,7 +59,7 @@ async function run() {
   );
   function mainloop(chip8) {
     // only draw every few ticks
-    for (let i = 0; i < TRICKS_PER_FRAME; i++) {
+    for (let i = 0; i < TICKS_PER_FRAME; i++) {
       chip8.tick();
     }
     chip8.tick_timers();
