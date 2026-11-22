@@ -49,12 +49,19 @@ impl EmuWasm {
     }
 
     #[wasm_bindgen]
-    pub fn keypress(&mut self, evt: KeyboardEvent, pressed: bool) {
-        let key = evt.key();
-        if let Some(k) = Self::key2btn(&key) {
+    pub fn keypress(&mut self, key: String, pressed: bool) {
+        if let Some(k) = Self::key2btn(&key.to_lowercase()) {
             self.chip8.keypress(k, pressed);
         }
     }
+
+    // #[wasm_bindgen]
+    // pub fn keypress(&mut self, evt: KeyboardEvent, pressed: bool) {
+    //     let key = evt.key();
+    //     if let Some(k) = Self::key2btn(&key) {
+    //         self.chip8.keypress(k, pressed);
+    //     }
+    // }
     // user input: well be doing as we did foe the desktop
     // forntend but this time we need to work with
     // javascripts's KeyboardEvent

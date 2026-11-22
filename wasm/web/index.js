@@ -21,10 +21,10 @@ async function run() {
   await init();
   let chip8 = new wasm.EmuWasm();
   document.addEventListener("keydown", function (evt) {
-    chip8.keypress(evt, true);
+    chip8.keypress(evt.key, true);
   });
   document.addEventListener("keyup", function (evt) {
-    chip8.keypress(evt, false);
+    chip8.keypress(evt.key, false);
   });
 
   input.addEventListener(
