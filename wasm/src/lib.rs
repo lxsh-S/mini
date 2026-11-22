@@ -1,18 +1,36 @@
 use chip8_core::*;
 use js_sys::Uint8Array;
+use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use web_sys::KeyboardEvent;
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, KeyboardEvent};
 
 #[wasm_bindgen]
 pub struct EmuWasm {
     chip8: Emu,
+    ctx: CanvasRenderingContext2d,
 }
 
 #[wasm_bindgen]
 impl EmuWasm {
     #[wasm_bindgen(constructor)]
     pub fn new() -> EmuWasm {
-        EmuWasm { chip8: Emu::new() }
+        let chip8 = Emu::new();
+        let document = web_sys::window().unwrap().document().unwrap();
+        let canvas = document.get_element_by_id("canvas").unwrap();
+        let canvas: HtmlCanvasElement = canvas
+            .dyn_into::<HtmlCanvasElement>()
+            .map_err(|_| ())
+            .unwrap();
+
+        let ctx = canvas
+            .get_context("2d")
+            .unwrap()
+            .unwrap()
+            .dyn_into::<CanvasRenderingContext2d>()
+            .unwrap();
+
+        EmuWasm { chip8, ctx }
     }
 
     // wrappers
