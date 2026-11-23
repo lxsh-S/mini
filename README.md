@@ -29,7 +29,7 @@ cd ~/dev/mini/ # Will definetly differ for you (go to project root)
 python -m http.server 8000
 ```
 
-Open your web browser and go to `http://localhost:8000`
+Open your web browser and go to `http://localhost:8000/wasm/web/`
 
 ## Reviewer?
 
@@ -37,4 +37,4 @@ Go to this website and try the project(yea, yea dont thank me :) : ``
 
 ## AI declaration
 
-AI was used in commit: `4fa3bff73a136feee68c0ba6a52b1d48c60655b4`, I couldnt figure out why I was not able to get the keyboard input.
+AI was used in commit: `4fa3bff73a136feee68c0ba6a52b1d48c60655b4`, I couldnt figure out why I was not able to get the keyboard input. Lost all my patience here: `24384b09c6d26499f40ec21f348d3359b6c48999`
