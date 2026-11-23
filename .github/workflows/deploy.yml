@@ -36,8 +36,8 @@ jobs:
       - name: Prepare website
         run: |
           mkdir -p site/pkg
-          cp -R wasm/web/. site/
-          cp -R wasm/pkg/. site/pkg/
+          cp -R wasm/web/. site/wasm/web/
+          cp -R wasm/pkg/. site/wasm/pkg/
 
       - name: Upload page artifacts
         uses: actions/upload-pages-artifact@v3
