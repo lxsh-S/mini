@@ -28,7 +28,7 @@ jobs:
           targets: wasm32-unknown-unknown
 
       - name: Install wasm-pack
-        run: cargo Install wasm-pack --locked
+        run: cargo install wasm-pack --locked
 
       - name: Build webasm
         run: wasm-pack build wasm --target web
