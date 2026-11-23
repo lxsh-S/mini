@@ -34,3 +34,7 @@ Open your web browser and go to `http://localhost:8000`
 ## Reviewer?
 
 Go to this website and try the project(yea, yea dont thank me :) : ``
+
+## AI declaration
+
+AI was used in commit: `4fa3bff73a136feee68c0ba6a52b1d48c60655b4`, I couldnt figure out why I was not able to get the keyboard input.
