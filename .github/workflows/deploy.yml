@@ -35,7 +35,8 @@ jobs:
 
       - name: Prepare website
         run: |
-          mkdir -p site/pkg
+          mkdir -p site/wasm/web
+          mkdir -p site/wasm/pkg
           cp -R wasm/web/. site/wasm/web/
           cp -R wasm/pkg/. site/wasm/pkg/
 
