@@ -6,6 +6,8 @@ A Chip8 emulator written in rust that has a web and normal desktop frontend!
 
 This is a simple implentation of the famous chip8 for putting in my first steps into emulation(kinda). We have a backend written in rust, desktop frontend and finnaly a web frontend written using rust, webassembly and javascript
 
+I recommend using it from it's web frontend where you have to pick a chip8 game you wanna play!
+
 ## KEYBINDINGS
 
 | keyboard | chip8 |
