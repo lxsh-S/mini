@@ -54,7 +54,8 @@ Open your web browser and go to `http://localhost:8000/wasm/web/`
 
 ## Reviewer?
 
-Go to this website and try the project(yea, yea dont thank me :): `https://lxsh-s.github.io/mini/wasm/web/`
+Go to this website and try the project(yea, yea dont thank me :): [Mini emulator!](https://lxsh-s.github.io/mini/wasm/web/)
+
 Also, I recommend you to play `UFO` as it is really easy to play!(It's in the repo inside file named as `games_chip8`)
 
 ## AI declaration
