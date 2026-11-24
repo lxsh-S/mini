@@ -28,6 +28,9 @@ I recommend using it from it's web frontend where you have to pick a chip8 game 
 | X        | 0     |
 | C        | B     |
 | V        | F     |
+This image would make it a lot easier :)
+<img width="396" height="195" alt="input_layout" src="https://github.com/user-attachments/assets/1cf4d1fc-bbe3-4bf0-a99e-1ae890dc6aad" />
+
 
 ## Installtion (debug, not for reviewers)
 
