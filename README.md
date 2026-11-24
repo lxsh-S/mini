@@ -1,5 +1,5 @@
 # mini
-
+<img width="1328" height="801" alt="2026-11-24-131424_hyprshot" src="https://github.com/user-attachments/assets/07c33d46-4746-4d28-943c-63f14ac3a863" />
 A Chip8 emulator written in rust that has a web and normal desktop frontend!
 
 ## Overview
